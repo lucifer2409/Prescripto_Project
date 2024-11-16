@@ -18,38 +18,47 @@ const Adddoctor = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
+  
     try {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('experience', experience);
-        formData.append('fees', fees);
-        formData.append('about', about);
-        formData.append('speciality', speciality);
-        formData.append('degree', degree);
-        formData.append('address', address);
-
-        const response = await fetch(`${backendURL}/api/admin/add-doctor`, {
-            method: 'POST',
-            headers: { 'atoken': atoken },
-            body: formData
-        });
-
-        const data = await response.json();
-        console.log("API Response:", data); // Add this line to see the response structure
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email' , email);
+      formData.append('password' , password);
+      formData.append('fees' , fees);
+      formData.append('degree' , degree);
+      formData.append('address' , address);
+      formData.append('speciality' , speciality);
+      formData.append('experience' , experience);
+      formData.append('about' , about);
+  
+      const response = await fetch(`${backendURL}/api/admin/add-doctor`, {
+        method: 'POST',
+        headers: { 'atoken': atoken, 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData)) // Convert FormData to JSON
+      });
+  
+      const data = await response.json();
+      console.log("API Response:", data);
+  
+      if (data && data.success) {
+        toast.success(data.message);
+        Setname('');
+        Setpassword('');
+        Setemail('');
+        Setaddress('');
+        Setabout('');
+        Setdegree('');
+        Setfees('');
         
-        if (data && data.success) {
-            toast.success(data.message);
-        } else {
-            toast.error(data ? data.message : "Unexpected error occurred");
-        }
+
+      } else {
+        toast.error(data ? data.message : "Unexpected error occurred");
+      }
     } catch (error) {
-        console.error("Error during form submission:", error);
-        toast.error("Submission failed");
+      toast.error(error.message);
+      console.log(error);
     }
-};
+  };
 
 
   return (
@@ -150,6 +159,9 @@ const Adddoctor = () => {
                 <option value="General physician">General physician</option>
                 <option value="Gynecologist">Gynecologist</option>
                 <option value="Dermatologist">Dermatologist</option>
+                <option value="Pediatricians">Pediatricians</option>
+                <option value="Neurologist">Neurologist</option>
+                <option value="Gastroenterologist">Gastroenterologist</option>
               </select>
             </div>
 

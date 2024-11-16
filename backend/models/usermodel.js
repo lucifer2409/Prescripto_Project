@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String  , default:"Name"},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    address: { type: String, required:true},
-    gender: {type:String , default:"Not Selected"} , 
-    dob: {type: String , default:"Not Selected"} , 
-    phone : {type:String , default: '0000000000'}
-})
+    address: { type: String},
+    gender: { type: String, default: "Not Selected" }, 
+    dob: { type: String, default: "Not Selected" }, 
+    phone: { type: String, default: '0000000000' }
+});
 
-const doctorModel = mongoose.models.doctor || mongoose.model('user', userSchema);
+// Export the model with the correct name, here it's 'User' since you're creating a user model
+const userModel = mongoose.models.User || mongoose.model('User', userSchema);
 
-export default userSchema;
+export default userModel;

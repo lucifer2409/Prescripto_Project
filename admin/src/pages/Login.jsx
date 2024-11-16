@@ -3,12 +3,14 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AdminContext } from '../context/AdminContext';
 import { useEffect } from 'react';
+import { DoctorContext } from '../context/DoctorContext';
 
 const Login = () => {
     const [state, setState] = useState('Admin');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { setAtoken, backendURL } = useContext(AdminContext);
+    const {setDToken , dtoken} = useContext(DoctorContext);
     useEffect(() => {
       const storedToken = localStorage.getItem('aToken');
       if (storedToken) {
@@ -35,7 +37,14 @@ const Login = () => {
                     toast.error(data.message || "Login failed.");
                 }
             } else {
-                toast.error("Invalid user type for login.");
+                const {data} = await axios.post(backendURL + '/api/doctor/login' , {email , password});
+                if (data.success) {
+                    localStorage.setItem('dtoken', data.token);
+                    setDToken(data.token);
+                    console.log(data.token);
+                } else {
+                    toast.error(data.message || "Login failed.");
+                }
             }
         } catch (error) {
             console.error(error);
