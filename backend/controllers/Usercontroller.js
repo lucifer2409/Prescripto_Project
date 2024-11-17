@@ -1,15 +1,13 @@
 import validator from 'validator'
-import bycrypt from 'bcrypt'
-import userModel from '../models/usermodel.js'
+import bycrypt from 'bcryptjs'
+import userModel from '../models/usermodel.js';
 import jwt from 'jsonwebtoken'
-import { v2 as cloudinary } from 'cloudinary';
 import razorpay from 'razorpay';
 import mongoose from 'mongoose';
-import doctorModel from '../models/doctormodel.js';
+import doctorModel from '../models/doctorModel.js';
 import appointmentModel from '../models/appointmentModel.js';
 
 // api to register user 
-
 const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;

@@ -1,10 +1,11 @@
 // API for adding doctor 
 import validator from 'validator';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import doctorModel from '../models/doctormodel.js';
+
 import appointmentModel from '../models/appointmentModel.js';
 import userModel from '../models/usermodel.js';
+import connectDB from '../config/mongodb.js';
 
 const addDoctor = async (req, res) => {
     try {
@@ -153,7 +154,9 @@ const allDoctors = async (req, res) => {
 const adminDashboard = async (req , res) => {
     try{
         const doctors = await doctorModel.find({});
+        await connectDB();
         const users = await userModel.find({});
+        console.log(users);
         const appointments = await appointmentModel.find({})
 
         const dashData = {

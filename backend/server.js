@@ -8,8 +8,8 @@ import userRouter from './routes/userRoute.js';
 // app config 
 const app = express();
 const portNumber = process.env.PORT || 4000;
-connectDB();
 // Middlewares 
+await connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
@@ -26,6 +26,7 @@ app.get('/' , (req , res)=> {
 
 app.use('/api/doctor' , doctorRouter);
 app.use('/api/user' , userRouter);
+
 
 app.listen(portNumber , ()=> {
   console.log(`Hi Abhishek server has been started, Listening at port : ${portNumber}`)

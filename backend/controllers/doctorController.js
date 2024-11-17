@@ -1,6 +1,6 @@
 import { response } from "express";
-import doctorModel from "../models/doctormodel.js";
-import bcrypt from 'bcrypt';
+import doctorModel from "../models/doctorModel.js";
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import appointmentModel from "../models/appointmentModel.js";
 
@@ -57,7 +57,7 @@ const loginDoctor = async(req , res) => {
     }
 }
 // API to mark appointment completed for doctor panel
-const appointmentComplete = async () => {
+const appointmentComplete = async (req , res) => {
     try{
         const {docId , appointmentId} = req.body;
         const appointmentData = await appointmentModel.findById(appointmentId);
@@ -77,9 +77,46 @@ const appointmentComplete = async () => {
     }
 }
 
+// API to get dashboard data for doctor panel 
+
+const doctorDashboard = async (req , res) => {
+    try{
+        const {docId} = req.body;
+        const appointments = await appointmentModel.find({docId});
+        let earnings = 0;
+        appointments.map((item)=> {
+            if(item.isCompleted || item.payment){
+                earnings += item.amount;
+            }
+        });
+
+        let patients = [];
+
+        appointments.map((item) => {
+            if(!patients.includes(item.userId)){
+                patients.push(item.userId);
+            }
+        })
+
+        const dashData = {
+            earnings , 
+            appointments: appointments.length,
+            patients: patients.length , 
+            latestappointments: appointments.reverse().slice(0,5),
+        }
+        res.json({success:true , dashData });
+    }
+
+
+    catch(err){
+        console.log(error);
+        res.json({success:false , message:error.message});
+    }
+}
+
 
 // API to cancel appointment for doctor panel
-const appointmentCancel = async () => {
+const appointmentCancel = async (req , res) => {
     try{
         const {docId , appointmentId} = req.body;
         const appointmentData = await appointmentModel.findById(appointmentId);
@@ -113,4 +150,4 @@ const appointmentsDoctor = async(req , res) => {
     }
 }
 
-export {changeAvailability , doctorList , loginDoctor , appointmentsDoctor , appointmentCancel , appointmentComplete}
+export {changeAvailability , doctorList , loginDoctor , appointmentsDoctor , appointmentCancel , appointmentComplete , doctorDashboard}
