@@ -4,6 +4,7 @@ import { DoctorContext } from '../../context/DoctorContext'
 import { useEffect } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { assets } from '../../assets/assets_admin/assets';
+import { cancelAppointment } from '../../../../backend/controllers/Usercontroller';
 const DoctorAppointment = () => {
     const {calculateAge , slotDateFormat , currency} = useContext(AppContext);
     const { dtoken, appointments, getAppointments , appointmentCancel , appointmentComplete} = useContext(DoctorContext);
@@ -54,8 +55,8 @@ const DoctorAppointment = () => {
                                 {currency}{item.amount}
                             </p>
                             <div className='flex'>
-                                <img src={assets.cancel_icon} className='w-10 cursor-pointer' alt="" />
-                                <img className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
+                                <img src={assets.cancel_icon} className='w-10 cursor-pointer' alt="" onClick={()=>cancelAppointment(item._id)}/>
+                                <img className='w-10 cursor-pointer' src={assets.tick_icon} alt="" onClick={() => appointmentComplete(item._id)}/>
                             </div>
                         </div>
                     ))
